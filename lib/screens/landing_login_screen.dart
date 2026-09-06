@@ -9,7 +9,6 @@ import '../core/widgets/accent_color_selector_widget.dart';
 import '../core/widgets/biometric_registration_dialog.dart';
 import '../core/widgets/master_auth_dialog.dart';
 import '../core/widgets/stacked_feature_card_deck.dart';
-import 'package:local_auth/local_auth.dart';
 import '../services/biometric_auth_service.dart';
 import '../state/vault_state.dart';
 import 'emergency_card_screen.dart';
@@ -236,7 +235,9 @@ class _LandingLoginScreenState extends State<LandingLoginScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result.errorMessage ?? 'Fingerprint verification failed.'),
+            content: Text(
+              result.errorMessage ?? 'Fingerprint verification failed.',
+            ),
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
               label: 'Use PIN',
@@ -677,7 +678,8 @@ class _LandingLoginScreenState extends State<LandingLoginScreen>
                                 // Biometric Target Frame Box [ (o) ]
                                 GestureDetector(
                                   key: const ValueKey(
-                                      'landing_biometric_viewfinder'),
+                                    'landing_biometric_viewfinder',
+                                  ),
                                   onTap: () => _triggerFingerprintDirect(),
                                   child: ScaleTransition(
                                     scale: _pulseAnimation,
@@ -865,7 +867,9 @@ class _LandingLoginScreenState extends State<LandingLoginScreen>
                                       children: [
                                         _buildBalanceMetric(
                                           label: 'Vault Spend',
-                                          val: widget.vaultState.formatSpend(totalSpend),
+                                          val: widget.vaultState.formatSpend(
+                                            totalSpend,
+                                          ),
                                           color: AppColors.mint,
                                         ),
                                         _buildBalanceMetric(
@@ -1515,8 +1519,7 @@ class _LandingLoginScreenState extends State<LandingLoginScreen>
                   _buildBottomBarItem(
                     icon: Icons.lock_outline_rounded,
                     label: 'PIN Login',
-                    onTap: () =>
-                        _openPinSheet(isRegistering: !isPinConfigured),
+                    onTap: () => _openPinSheet(isRegistering: !isPinConfigured),
                   ),
                 ],
               ),
@@ -1808,9 +1811,10 @@ class _BiometricAuthSheetState extends State<_BiometricAuthSheet>
   }
 
   Future<void> _triggerRealBiometric() async {
-    final result = await widget.vaultState.biometricAuth.authenticateWithFingerprint(
-      reason: 'Scan your fingerprint to unlock LifeVault',
-    );
+    final result = await widget.vaultState.biometricAuth
+        .authenticateWithFingerprint(
+          reason: 'Scan your fingerprint to unlock LifeVault',
+        );
     if (!mounted) return;
     if (result.isSuccess) {
       setState(() => _isSuccess = true);
@@ -1928,7 +1932,9 @@ class _BiometricAuthSheetState extends State<_BiometricAuthSheet>
           const SizedBox(height: 28),
 
           Text(
-            _isSuccess ? 'Identity Verified' : 'Scan Fingerprint to authenticate',
+            _isSuccess
+                ? 'Identity Verified'
+                : 'Scan Fingerprint to authenticate',
             style: TextStyle(
               color: _isSuccess ? AppColors.mint : Colors.white70,
               fontSize: 13,

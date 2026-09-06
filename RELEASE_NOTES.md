@@ -1,16 +1,16 @@
-# LifeVault AI v5.2.4 — Production Release (Android APK)
+# LifeVault AI v5.2.5 — Production Release (Android APK)
 
-> **Tag:** `v5.2.4`  
+> **Tag:** `v5.2.5`  
 > **Release Target:** `main`  
 > **Package:** `com.theoriongd.lifevault` (LifeVault AI)  
-> **Build:** `5.2.4+1`  
-> **Asset:** `LifeVault-v5.2.4-release.apk` / `lifevault-release.apk` (88.7 MB)
+> **Build:** `5.2.5+1`  
+> **Asset:** `LifeVault-v5.2.5-release.apk` / `lifevault-release.apk` (88.6 MB)
 
 ---
 
 ## 🌟 Overview
 
-We are proud to present **LifeVault AI v5.2.4**, featuring enhanced cross-platform audio recording, emergency medical dispatch with GPS coordinates, local background notifications, dedicated Cyber Face ID biometric scanning, instant Amazon-style auto-lock on app switching, and biometric zero-knowledge authentication.
+We are proud to present **LifeVault AI v5.2.5**, featuring enhanced cross-platform audio recording, emergency medical dispatch with GPS coordinates, local background notifications, dedicated Cyber Face ID biometric scanning, instant Amazon-style auto-lock on app switching, and biometric zero-knowledge authentication.
 
 **LifeVault AI** is a zero-knowledge, privacy-first personal document intelligence vault and multimodal security system built with Flutter and Dart. It combines client-side cryptographic storage with multimodal artificial intelligence (**Google Gemini 3.7 Flash** and **Hugging Face Whisper**) to provide automated document OCR, conversational retrieval (RAG), expense and warranty tracking, encrypted voice notes, and instant emergency medical access.
 
@@ -20,26 +20,26 @@ We are proud to present **LifeVault AI v5.2.4**, featuring enhanced cross-platfo
 
 | File | Type | Size | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- |
-| **`LifeVault-v5.2.4-release.apk`** | Android Standalone Release APK | `~88.7 MB` (`92,990,199 bytes`) | `58AD3C07ED587629691B0112FA3DCA6FDE54582514F277AF54F4B2AA25F4DF3A` |
-| **`lifevault-release.apk`** | Android Standalone Release APK | `~88.7 MB` (`92,990,199 bytes`) | `58AD3C07ED587629691B0112FA3DCA6FDE54582514F277AF54F4B2AA25F4DF3A` |
+| **`LifeVault-v5.2.5-release.apk`** | Android Standalone Release APK | `~88.6 MB` (`92,907,655 bytes`) | `5CCF4A1F678798C9CB80E64C005FF4FC0EA30C19D64C4B668CC77C496EE689CC` |
+| **`lifevault-release.apk`** | Android Standalone Release APK | `~88.6 MB` (`92,907,655 bytes`) | `5CCF4A1F678798C9CB80E64C005FF4FC0EA30C19D64C4B668CC77C496EE689CC` |
 
 ### Checksum Verification
 
 **Windows (PowerShell):**
 ```powershell
-Get-FileHash -Path ".\LifeVault-v5.2.4-release.apk" -Algorithm SHA256
-# Expected: 58AD3C07ED587629691B0112FA3DCA6FDE54582514F277AF54F4B2AA25F4DF3A
+Get-FileHash -Path ".\LifeVault-v5.2.5-release.apk" -Algorithm SHA256
+# Expected: 5CCF4A1F678798C9CB80E64C005FF4FC0EA30C19D64C4B668CC77C496EE689CC
 ```
 
 **Linux / macOS:**
 ```bash
-sha256sum LifeVault-v5.2.4-release.apk
-# Expected: 58ad3c07ed587629691b0112fa3dca6fde54582514f277af54f4b2aa25f4df3a  LifeVault-v5.2.4-release.apk
+sha256sum LifeVault-v5.2.5-release.apk
+# Expected: 5ccf4a1f678798c9cb80e64c005ff4fc0ea30c19d64c4b668cc77c496ee689cc  LifeVault-v5.2.5-release.apk
 ```
 
 ---
 
-## 🚀 Key Fixes & New Features in v5.2.4
+## 🚀 Key Fixes & New Features in v5.2.5
 
 ### 👤 1. Dedicated Cyber Face ID Recognition Scanner
 - **Immersive Face ID Scanner Viewfinder**: Animated 3D-styled face mesh wireframe, rotating radar rings, and animated laser sweep.
