@@ -23,14 +23,14 @@ jobs:
       - name: Install Project Dependencies
         run: flutter pub get
 
-      # This creates the missing file in the correct 'services' folder before building
+      # This creates a dummy app_env file that maps directly to global environment values
       - name: Create Missing AppEnv File
         run: |
           mkdir -p lib/services
-          echo "class AppEnv { static const geminiApiKey = 'mock_key'; static const huggingFaceApiKey = 'mock_key'; }" > lib/services/app_env.dart
+          echo "class AppEnv { static const geminiApiKey = String.fromEnvironment('GEMINI_KEY', defaultValue: 'mock_key'); static const huggingFaceApiKey = String.fromEnvironment('HF_KEY', defaultValue: 'mock_key'); }" > lib/services/app_env.dart
 
       - name: Build Unsigned App Bundle (.aab)
-        run: flutter build appbundle --no-shrink
+        run: flutter build appbundle --no-shrink --dart-define=GEMINI_KEY=mock_key --dart-define=HF_KEY=mock_key
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
