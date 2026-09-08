@@ -23,6 +23,12 @@ jobs:
       - name: Install Project Dependencies
         run: flutter pub get
 
+      # This creates the missing file in the correct 'services' folder before building
+      - name: Create Missing AppEnv File
+        run: |
+          mkdir -p lib/services
+          echo "class AppEnv { static const geminiApiKey = 'mock_key'; static const huggingFaceApiKey = 'mock_key'; }" > lib/services/app_env.dart
+
       - name: Build Unsigned App Bundle (.aab)
         run: flutter build appbundle --no-shrink
 
