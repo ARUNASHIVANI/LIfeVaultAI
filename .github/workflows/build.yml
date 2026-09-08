@@ -1,6 +1,6 @@
-name: Build Android AAB
+name: Build Flutter Android AAB
 on:
-  workflow_dispatch: # This adds a manual "Play" button so you can start the build yourself
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,14 +15,19 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Grant Permission to Build
-        run: chmod +x gradlew
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
 
-      - name: Build Unsigned App Bundle
-        run: ./gradlew bundleRelease
+      - name: Install Project Dependencies
+        run: flutter pub get
+
+      - name: Build Unsigned App Bundle (.aab)
+        run: flutter build appbundle --no-shrink
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
-          path: app/build/outputs/bundle/release/*.aab
+          name: flutter-release-aab
+          path: build/app/outputs/bundle/release/*.aab
