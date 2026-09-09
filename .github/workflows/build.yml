@@ -78,41 +78,55 @@ jobs:
           EOF
 
       # --------------------------------------------------
-      # 7. Verify AppEnv
+      # 7. Restore release keystore
       # --------------------------------------------------
-      - name: Verify AppEnv File
+      - name: Restore Release Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "========================================"
-          echo "AppEnv file:"
-          echo "========================================"
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
 
-          cat lib/core/config/app_env.dart
+          if [ ! -f android/app/upload-keystore.jks ]; then
+            echo "ERROR: Release keystore was not created."
+            exit 1
+          fi
 
-          echo "========================================"
+          echo "Release keystore restored successfully."
 
       # --------------------------------------------------
-      # 8. Clean previous Flutter build
+      # 8. Check keystore file
+      # --------------------------------------------------
+      - name: Verify Release Keystore
+        run: |
+          ls -lh android/app/upload-keystore.jks
+
+      # --------------------------------------------------
+      # 9. Clean previous Flutter build
       # --------------------------------------------------
       - name: Flutter Clean
         run: flutter clean
 
       # --------------------------------------------------
-      # 9. Get dependencies again after clean
+      # 10. Get dependencies again
       # --------------------------------------------------
       - name: Flutter Pub Get
         run: flutter pub get
 
       # --------------------------------------------------
-      # 10. Analyze project
+      # 11. Analyze project
       # --------------------------------------------------
       - name: Flutter Analyze
         run: flutter analyze
         continue-on-error: true
 
       # --------------------------------------------------
-      # 11. Build Android App Bundle
+      # 12. Build SIGNED Android App Bundle
       # --------------------------------------------------
-      - name: Build Android App Bundle
+      - name: Build Signed Android App Bundle
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           flutter build appbundle \
             --release \
@@ -122,7 +136,7 @@ jobs:
             --dart-define=MONGODB_URI=""
 
       # --------------------------------------------------
-      # 12. Verify AAB
+      # 13. Verify AAB
       # --------------------------------------------------
       - name: Verify AAB
         run: |
@@ -138,16 +152,24 @@ jobs:
           fi
 
           echo "========================================"
-          echo "AAB generated successfully!"
+          echo "SIGNED AAB generated successfully!"
           echo "========================================"
 
       # --------------------------------------------------
-      # 13. Upload AAB
+      # 14. Upload AAB
       # --------------------------------------------------
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LifeVaultAI-AAB
+          name: LifeVaultAI-Signed-AAB
           path: build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
+
+      # --------------------------------------------------
+      # 15. Remove temporary keystore
+      # --------------------------------------------------
+      - name: Remove Temporary Keystore
+        if: always()
+        run: |
+          rm -f android/app/upload-keystore.jks
