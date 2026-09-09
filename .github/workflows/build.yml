@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       # --------------------------------------------------
       # 1. Checkout repository
       # --------------------------------------------------
@@ -33,7 +34,7 @@ jobs:
           cache: true
 
       # --------------------------------------------------
-      # 4. Display Flutter and Dart versions
+      # 4. Check Flutter and Dart versions
       # --------------------------------------------------
       - name: Check Flutter Version
         run: |
@@ -41,18 +42,14 @@ jobs:
           dart --version
 
       # --------------------------------------------------
-      # 5. Install Flutter dependencies
+      # 5. Install dependencies
       # --------------------------------------------------
       - name: Install Project Dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
 
       # --------------------------------------------------
       # 6. Create AppEnv file
-      #
-      # Your Dart services import:
-      # lib/core/config/app_env.dart
-      #
-      # Therefore the file MUST be created here.
       # --------------------------------------------------
       - name: Create AppEnv File
         run: |
@@ -71,38 +68,49 @@ jobs:
                   'HF_KEY',
                   defaultValue: 'mock_key',
                 );
+
+            static const mongoDbUri =
+                String.fromEnvironment(
+                  'MONGODB_URI',
+                  defaultValue: '',
+                );
           }
           EOF
 
       # --------------------------------------------------
-      # 7. Verify AppEnv file
+      # 7. Verify AppEnv
       # --------------------------------------------------
       - name: Verify AppEnv File
         run: |
-          echo "----------------------------------------"
-          echo "Checking AppEnv file"
-          echo "----------------------------------------"
-
-          if [ ! -f lib/core/config/app_env.dart ]; then
-            echo "ERROR: AppEnv file was not created!"
-            exit 1
-          fi
+          echo "========================================"
+          echo "AppEnv file:"
+          echo "========================================"
 
           cat lib/core/config/app_env.dart
 
-          echo "----------------------------------------"
-          echo "AppEnv file exists successfully"
-          echo "----------------------------------------"
+          echo "========================================"
 
       # --------------------------------------------------
-      # 8. Analyze Flutter project
+      # 8. Clean previous Flutter build
+      # --------------------------------------------------
+      - name: Flutter Clean
+        run: flutter clean
+
+      # --------------------------------------------------
+      # 9. Get dependencies again after clean
+      # --------------------------------------------------
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      # --------------------------------------------------
+      # 10. Analyze project
       # --------------------------------------------------
       - name: Flutter Analyze
         run: flutter analyze
         continue-on-error: true
 
       # --------------------------------------------------
-      # 9. Build Android App Bundle
+      # 11. Build Android App Bundle
       # --------------------------------------------------
       - name: Build Android App Bundle
         run: |
@@ -110,30 +118,31 @@ jobs:
             --release \
             --no-shrink \
             --dart-define=GEMINI_KEY=mock_key \
-            --dart-define=HF_KEY=mock_key
+            --dart-define=HF_KEY=mock_key \
+            --dart-define=MONGODB_URI=""
 
       # --------------------------------------------------
-      # 10. Check generated AAB
+      # 12. Verify AAB
       # --------------------------------------------------
       - name: Verify AAB
         run: |
-          echo "----------------------------------------"
-          echo "Checking generated AAB"
-          echo "----------------------------------------"
+          echo "========================================"
+          echo "Checking generated AAB..."
+          echo "========================================"
 
           ls -lh build/app/outputs/bundle/release/
 
           if [ ! -f build/app/outputs/bundle/release/app-release.aab ]; then
-            echo "ERROR: AAB file was not generated!"
+            echo "ERROR: AAB was not generated."
             exit 1
           fi
 
-          echo "----------------------------------------"
+          echo "========================================"
           echo "AAB generated successfully!"
-          echo "----------------------------------------"
+          echo "========================================"
 
       # --------------------------------------------------
-      # 11. Upload AAB to GitHub Actions Artifact
+      # 13. Upload AAB
       # --------------------------------------------------
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
