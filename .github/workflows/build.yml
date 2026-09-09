@@ -1,10 +1,12 @@
 name: Build Flutter Android AAB
+
 on:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -23,7 +25,6 @@ jobs:
       - name: Install Project Dependencies
         run: flutter pub get
 
-      # This creates a dummy app_env file that maps directly to global environment values
       - name: Create Missing AppEnv File
         run: |
           mkdir -p lib/services
